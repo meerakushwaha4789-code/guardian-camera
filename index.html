@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guardian Pro v3.0 | Tactical Security Suite</title>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  
+  <!-- EthicalAds Library for Privacy-First Publisher Ads -->
+  <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
+  
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --panel-bg: rgba(15, 23, 42, 0.9);
+      --cyan: #00f2fe;
+      --red: #ef4444;
+      --green: #10b981;
+      --gold: #f59e0b;
+      --font-title: 'Chakra Petch', sans-serif;
+      --font-mono: 'Share Tech Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg-dark); color: #f3f4f6; font-family: var(--font-mono); min-height: 100vh; padding: 16px; }
+
+    /* Visual Strobe Alarm Animation */
+    @keyframes strobe {
+      0%, 100% { background: var(--bg-dark); }
+      50% { background: #7f1d1d; }
+    }
+    body.alarm-active { animation: strobe 0.3s infinite; }
+
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--cyan); padding-bottom: 12px; margin-bottom: 20px; }
+    .title { font-family: var(--font-title); font-size: 1.6rem; color: var(--cyan); letter-spacing: 2px; font-weight: 900; }
+    .badge-free { background: var(--green); color: #000; font-family: var(--font-title); font-weight: 900; padding: 4px 10px; border-radius: 4px; font-size: 11px; letter-spacing: 1px; }
+
+    /* Dashboard Grid */
+    .dashboard { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+    @media (max-width: 900px) { .dashboard { grid-template-columns: 1fr; } }
+
+    /* Video Viewport */
+    .video-viewport { background: #000; border: 1px solid var(--cyan); border-radius: 12px; position: relative; overflow: hidden; height: 420px; box-shadow: 0 0 15px rgba(0,242,254,0.15); }
+    video, canvas { width: 100%; height: 100%; object-fit: cover; }
+    
+    /* FX Filters */
+    .filter-normal { filter: none; }
+    .filter-night { filter: sepia(100%) hue-rotate(90deg) saturate(300%) contrast(150%); }
+    .filter-thermal { filter: invert(100%) hue-rotate(180deg) saturate(200%); }
+
+    /* HUD Overlay */
+    .hud-overlay { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; pointer-events: none; }
+    .rec-indicator { color: var(--red); font-family: var(--font-title); font-weight: 700; display: none; align-items: center; gap: 6px; }
+    .rec-dot { width: 10px; height: 10px; background: var(--red); border-radius: 50%; animation: blink 1s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* Controls Panel */
+    .panel { background: var(--panel-bg); border: 1px solid rgba(0,242,254,0.25); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .panel-title { font-family: var(--font-title); color: var(--cyan); margin-bottom: 12px; font-size: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; font-weight: 700; }
+    
+    .btn { background: rgba(0, 242, 254, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 10px 14px; border-radius: 8px; font-family: var(--font-title); font-weight: 700; cursor: pointer; transition: 0.2s; width: 100%; margin-bottom: 8px; }
+    .btn:hover { background: var(--cyan); color: #000; }
+    .btn-danger { border-color: var(--red); color: var(--red); background: rgba(239, 68, 68, 0.1); }
+    .btn-danger:hover { background: var(--red); color: #fff; }
+
+    /* Sensor Gauges */
+    .meter-label { display: flex; justify-content: space-between; font-size: 11px; margin-top: 6px; }
+    .meter-bar { width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; margin: 4px 0 12px; }
+    .meter-fill { height: 100%; width: 0%; background: var(--green); transition: width 0.1s linear; }
+
+    /* Gallery Log */
+    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)); gap: 8px; max-height: 150px; overflow-y: auto; padding-right: 4px; }
+    .gallery img { width: 100%; height: 55px; object-fit: cover; border-radius: 6px; border: 1px solid var(--cyan); }
+
+    /* Stealth Screen Overlay */
+    #stealthOverlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; color: #15803d; z-index: 9999; padding: 30px; font-family: monospace; }
+
+    /* Ethical Ads & Tip Footer */
+    footer { margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; }
+    .coffee-btn { background: #ffdd00; color: #000; font-family: var(--font-title); font-weight: 900; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="title">⚡ GUARDIAN PRO v3.0</div>
+    <div class="badge-free">100% FREE UNLOCKED</div>
+  </header>
+
+  <div class="dashboard">
+    <!-- Camera Feed Column -->
+    <div>
+      <div class="video-viewport">
+        <video id="webcam" autoplay playsinline muted class="filter-normal"></video>
+        <canvas id="motionCanvas" style="display:none;"></canvas>
+        <div class="hud-overlay">
+          <div class="rec-indicator" id="recBadge"><div class="rec-dot"></div> BREACH RECORDING</div>
+          <div style="background:rgba(0,0,0,0.6); padding:4px 8px; border-radius:4px; font-size:12px;" id="timestamp">00:00:00</div>
+        </div>
+      </div>
+
+      <!-- Vision FX Controls -->
+      <div style="display: flex; gap: 10px; margin-top: 12px;">
+        <button class="btn" onclick="setFilter('filter-normal')">Normal</button>
+        <button class="btn" onclick="setFilter('filter-night')">Night Vision</button>
+        <button class="btn" onclick="setFilter('filter-thermal')">Thermal FX</button>
+        <button class="btn btn-danger" onclick="enableStealth()">Stealth Mode</button>
+      </div>
+    </div>
+
+    <!-- Security Radar Column -->
+    <div>
+      <!-- Sensors -->
+      <div class="panel">
+        <div class="panel-title">LIVE SENSOR ARSENAL</div>
+        
+        <div class="meter-label"><span>Motion Sensitivity</span><span id="motionVal">0%</span></div>
+        <div class="meter-bar"><div class="meter-fill" id="motionMeter"></div></div>
+
+        <div class="meter-label"><span>Audio Decibel Meter</span><span id="audioVal">0%</span></div>
+        <div class="meter-bar"><div class="meter-fill" id="audioMeter"></div></div>
+
+        <button class="btn" id="armBtn" onclick="toggleArming()">ARM SYSTEM</button>
+      </div>
+
+      <!-- Log Snapshot Gallery -->
+      <div class="panel">
+        <div class="panel-title">INTRUDER SNAPSHOT LOGS</div>
+        <div class="gallery" id="snapshotGallery">
+          <!-- Snapshots automatically prepend here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Disguised Stealth Screen -->
+  <div id="stealthOverlay" onclick="disableStealth()">
+    <div>[SYSTEM UPDATE IN PROGRESS - DO NOT TURN OFF DEVICE]</div>
+    <div style="margin-top:20px; font-size: 12px; opacity:0.5;">(Click anywhere on screen to exit stealth mode)</div>
+  </div>
+
+  <!-- Footer Monetization -->
+  <footer>
+    <div data-ea-publisher="naimish-guardian" data-ea-type="image" style="max-width:300px;"></div>
+    <a href="https://buymeacoffee.com" target="_blank" class="coffee-btn">☕ Buy Me A Coffee</a>
+  </footer>
+
+  <script>
+    let video = document.getElementById('webcam');
+    let canvas = document.getElementById('motionCanvas');
+    let ctx = canvas.getContext('2d');
+    let armed = false;
+    let prevFrame = null;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let audioCtx, analyser, dataArray;
+
+    // Real-Time HUD Clock
+    setInterval(() => {
+      document.getElementById('timestamp').innerText = new Date().toLocaleTimeString();
+    }, 1000);
+
+    // Initialize Camera & Microphone
+    async function initSensors() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        video.srcObject = stream;
+        setupAudio(stream);
+        requestAnimationFrame(processSensors);
+      } catch (err) {
+        alert("Camera and Microphone access are required for Guardian Pro!");
+      }
+    }
+
+    // Web Audio Analyzer
+    function setupAudio(stream) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      const source = audioCtx.createMediaStreamSource(stream);
+      source.connect(analyser);
+      analyser.fftSize = 64;
+      dataArray = new Uint8Array(analyser.frequencyBinCount);
+    }
+
+    // Camera Filter Switcher
+    function setFilter(filterClass) {
+      video.className = filterClass;
+    }
+
+    // Arming Toggle
+    function toggleArming() {
+      armed = !armed;
+      const btn = document.getElementById('armBtn');
+      if (armed) {
+        btn.innerText = "SYSTEM ARMED (DISARM)";
+        btn.classList.add('btn-danger');
+      } else {
+        btn.innerText = "ARM SYSTEM";
+        btn.classList.remove('btn-danger');
+        document.body.classList.remove('alarm-active');
+      }
+    }
+
+    // Process Motion & Audio Sensor Frames
+    function processSensors() {
+      if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        // Motion Analysis
+        canvas.width = 160; canvas.height = 120;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        let currentFrame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        if (prevFrame && armed) {
+          let diff = 0;
+          for (let i = 0; i < currentFrame.data.length; i += 4) {
+            diff += Math.abs(currentFrame.data[i] - prevFrame.data[i]);
+          }
+          let score = Math.min(100, Math.floor(diff / 10000));
+          document.getElementById('motionMeter').style.width = score + '%';
+          document.getElementById('motionVal').innerText = score + '%';
+
+          if (score > 35) triggerBreachAlert();
+        }
+        prevFrame = currentFrame;
+
+        // Audio Frequency Analysis
+        if (analyser && armed) {
+          analyser.getByteFrequencyData(dataArray);
+          let sum = dataArray.reduce((a, b) => a + b, 0);
+          let audioScore = Math.min(100, Math.floor(sum / dataArray.length));
+          document.getElementById('audioMeter').style.width = audioScore + '%';
+          document.getElementById('audioVal').innerText = audioScore + '%';
+
+          if (audioScore > 60) triggerBreachAlert();
+        }
+      }
+      requestAnimationFrame(processSensors);
+    }
+
+    // Intruder Breach Handler
+    function triggerBreachAlert() {
+      if (document.body.classList.contains('alarm-active')) return;
+
+      document.body.classList.add('alarm-active');
+      playSynthesizedSiren();
+      takeSnapshot();
+      startVideoRecording();
+
+      setTimeout(() => {
+        document.body.classList.remove('alarm-active');
+      }, 4000);
+    }
+
+    // Web Audio Synthesizer Alarm (Zero audio asset files required)
+    function playSynthesizedSiren() {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.5);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.6);
+    }
+
+    // Photo Snapshot Capture
+    function takeSnapshot() {
+      const snapCanvas = document.createElement('canvas');
+      snapCanvas.width = video.videoWidth;
+      snapCanvas.height = video.videoHeight;
+      snapCanvas.getContext('2d').drawImage(video, 0, 0);
+      
+      const img = document.createElement('img');
+      img.src = snapCanvas.toDataURL('image/png');
+      document.getElementById('snapshotGallery').prepend(img);
+    }
+
+    // Auto Incident Recording
+    function startVideoRecording() {
+      if (mediaRecorder && mediaRecorder.state === "recording") return;
+
+      const recBadge = document.getElementById('recBadge');
+      recBadge.style.display = 'flex';
+      recordedChunks = [];
+
+      mediaRecorder = new MediaRecorder(video.srcObject);
+      mediaRecorder.ondataavailable = e => recordedChunks.push(e.data);
+      mediaRecorder.onstop = saveRecording;
+
+      mediaRecorder.start();
+      setTimeout(() => {
+        if (mediaRecorder.state === "recording") {
+          mediaRecorder.stop();
+        }
+        recBadge.style.display = 'none';
+      }, 5000);
+    }
+
+    function saveRecording() {
+      const blob = new Blob(recordedChunks, { type: 'video/webm' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `guardian_breach_${Date.now()}.webm`;
+      a.click();
+    }
+
+    // Stealth Mode Screen Masking
+    function enableStealth() { document.getElementById('stealthOverlay').style.display = 'block'; }
+    function disableStealth() { document.getElementById('stealthOverlay').style.display = 'none'; }
+
+    // Bootstrap app
+    initSensors();
+  </script>
+</body>
+</html>
