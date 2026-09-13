@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Guardian Pro v3.0 | Tactical Security Suite</title>
+  <title>Guardian Pro v3.0 | 100% Free Tactical Security</title>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  
-  <!-- EthicalAds Library for Privacy-First Publisher Ads -->
+  <!-- EthicalAds Library (Privacy-First Ad Support) -->
   <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
   
   <style>
     :root {
       --bg-dark: #030712;
-      --panel-bg: rgba(15, 23, 42, 0.9);
+      --panel-bg: rgba(15, 23, 42, 0.85);
       --cyan: #00f2fe;
       --red: #ef4444;
       --green: #10b981;
@@ -22,9 +21,9 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg-dark); color: #f3f4f6; font-family: var(--font-mono); min-height: 100vh; padding: 16px; }
+    body { background: var(--bg-dark); color: #f3f4f6; font-family: var(--font-mono); min-height: 100vh; padding: 15px; }
 
-    /* Visual Strobe Alarm Animation */
+    /* Flash Alarm Animation */
     @keyframes strobe {
       0%, 100% { background: var(--bg-dark); }
       50% { background: #7f1d1d; }
@@ -32,31 +31,29 @@
     body.alarm-active { animation: strobe 0.3s infinite; }
 
     header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--cyan); padding-bottom: 12px; margin-bottom: 20px; }
-    .title { font-family: var(--font-title); font-size: 1.6rem; color: var(--cyan); letter-spacing: 2px; font-weight: 900; }
-    .badge-free { background: var(--green); color: #000; font-family: var(--font-title); font-weight: 900; padding: 4px 10px; border-radius: 4px; font-size: 11px; letter-spacing: 1px; }
+    .title { font-family: var(--font-title); font-size: 1.5rem; color: var(--cyan); letter-spacing: 2px; }
+    .badge-free { background: var(--green); color: #000; font-family: var(--font-title); font-weight: 900; padding: 4px 10px; border-radius: 4px; font-size: 11px; }
 
-    /* Dashboard Grid */
+    /* Grid Layout */
     .dashboard { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
     @media (max-width: 900px) { .dashboard { grid-template-columns: 1fr; } }
 
-    /* Video Viewport */
-    .video-viewport { background: #000; border: 1px solid var(--cyan); border-radius: 12px; position: relative; overflow: hidden; height: 420px; box-shadow: 0 0 15px rgba(0,242,254,0.15); }
+    .video-viewport { background: #000; border: 1px solid var(--cyan); border-radius: 12px; position: relative; overflow: hidden; height: 420px; }
     video, canvas { width: 100%; height: 100%; object-fit: cover; }
     
-    /* FX Filters */
+    /* Dynamic Video Filters */
     .filter-normal { filter: none; }
     .filter-night { filter: sepia(100%) hue-rotate(90deg) saturate(300%) contrast(150%); }
     .filter-thermal { filter: invert(100%) hue-rotate(180deg) saturate(200%); }
 
-    /* HUD Overlay */
     .hud-overlay { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; pointer-events: none; }
     .rec-indicator { color: var(--red); font-family: var(--font-title); font-weight: 700; display: none; align-items: center; gap: 6px; }
     .rec-dot { width: 10px; height: 10px; background: var(--red); border-radius: 50%; animation: blink 1s infinite; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
     /* Controls Panel */
-    .panel { background: var(--panel-bg); border: 1px solid rgba(0,242,254,0.25); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
-    .panel-title { font-family: var(--font-title); color: var(--cyan); margin-bottom: 12px; font-size: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; font-weight: 700; }
+    .panel { background: var(--panel-bg); border: 1px solid rgba(0,242,254,0.2); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .panel-title { font-family: var(--font-title); color: var(--cyan); margin-bottom: 12px; font-size: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; }
     
     .btn { background: rgba(0, 242, 254, 0.1); border: 1px solid var(--cyan); color: var(--cyan); padding: 10px 14px; border-radius: 8px; font-family: var(--font-title); font-weight: 700; cursor: pointer; transition: 0.2s; width: 100%; margin-bottom: 8px; }
     .btn:hover { background: var(--cyan); color: #000; }
@@ -64,84 +61,86 @@
     .btn-danger:hover { background: var(--red); color: #fff; }
 
     /* Sensor Gauges */
-    .meter-label { display: flex; justify-content: space-between; font-size: 11px; margin-top: 6px; }
-    .meter-bar { width: 100%; height: 10px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; margin: 4px 0 12px; }
+    .meter-bar { width: 100%; height: 12px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; margin: 8px 0 16px; }
     .meter-fill { height: 100%; width: 0%; background: var(--green); transition: width 0.1s linear; }
 
     /* Gallery Log */
-    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)); gap: 8px; max-height: 150px; overflow-y: auto; padding-right: 4px; }
-    .gallery img { width: 100%; height: 55px; object-fit: cover; border-radius: 6px; border: 1px solid var(--cyan); }
+    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; max-height: 160px; overflow-y: auto; }
+    .gallery img { width: 100%; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid var(--cyan); cursor: pointer; }
 
     /* Stealth Screen Overlay */
-    #stealthOverlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; color: #15803d; z-index: 9999; padding: 30px; font-family: monospace; }
+    #stealthOverlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; color: #15803d; z-index: 9999; padding: 20px; font-family: monospace; }
 
     /* Ethical Ads & Tip Footer */
     footer { margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; }
-    .coffee-btn { background: #ffdd00; color: #000; font-family: var(--font-title); font-weight: 900; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-size: 14px; }
+    .coffee-btn { background: #ffdd00; color: #000; font-family: var(--font-title); font-weight: 900; text-decoration: none; padding: 10px 16px; border-radius: 8px; }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="title">⚡ GUARDIAN PRO v3.0</div>
-    <div class="badge-free">100% FREE UNLOCKED</div>
+    <div class="title">GUARDIAN PRO v3.0</div>
+    <div class="badge-free">UNLOCKED FREE EDITION</div>
   </header>
 
   <div class="dashboard">
-    <!-- Camera Feed Column -->
+    <!-- Main Video Monitor -->
     <div>
       <div class="video-viewport">
         <video id="webcam" autoplay playsinline muted class="filter-normal"></video>
         <canvas id="motionCanvas" style="display:none;"></canvas>
         <div class="hud-overlay">
-          <div class="rec-indicator" id="recBadge"><div class="rec-dot"></div> BREACH RECORDING</div>
+          <div class="rec-indicator" id="recBadge"><div class="rec-dot"></div> RECORDING BREACH</div>
           <div style="background:rgba(0,0,0,0.6); padding:4px 8px; border-radius:4px; font-size:12px;" id="timestamp">00:00:00</div>
         </div>
       </div>
 
-      <!-- Vision FX Controls -->
+      <!-- Quick Control Dock -->
       <div style="display: flex; gap: 10px; margin-top: 12px;">
-        <button class="btn" onclick="setFilter('filter-normal')">Normal</button>
+        <button class="btn" onclick="setFilter('filter-normal')">Normal View</button>
         <button class="btn" onclick="setFilter('filter-night')">Night Vision</button>
         <button class="btn" onclick="setFilter('filter-thermal')">Thermal FX</button>
         <button class="btn btn-danger" onclick="enableStealth()">Stealth Mode</button>
       </div>
     </div>
 
-    <!-- Security Radar Column -->
+    <!-- Surveillance Controls & Sensors -->
     <div>
-      <!-- Sensors -->
+      <!-- Sensor Panel -->
       <div class="panel">
         <div class="panel-title">LIVE SENSOR ARSENAL</div>
         
-        <div class="meter-label"><span>Motion Sensitivity</span><span id="motionVal">0%</span></div>
+        <label style="font-size: 12px;">Motion Sensitivity</label>
         <div class="meter-bar"><div class="meter-fill" id="motionMeter"></div></div>
 
-        <div class="meter-label"><span>Audio Decibel Meter</span><span id="audioVal">0%</span></div>
+        <label style="font-size: 12px;">Audio Decibel Meter</label>
         <div class="meter-bar"><div class="meter-fill" id="audioMeter"></div></div>
 
-        <button class="btn" id="armBtn" onclick="toggleArming()">ARM SYSTEM</button>
+        <button class="btn" id="armBtn" onclick="toggleArming()">ARM SECURITY SYSTEM</button>
       </div>
 
-      <!-- Log Snapshot Gallery -->
+      <!-- Incident Snapshot Gallery -->
       <div class="panel">
-        <div class="panel-title">INTRUDER SNAPSHOT LOGS</div>
+        <div class="panel-title">INTRUDER LOG GALLERY</div>
         <div class="gallery" id="snapshotGallery">
-          <!-- Snapshots automatically prepend here -->
+          <!-- Snapshots automatically append here -->
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Disguised Stealth Screen -->
+  <!-- Stealth Overlay Screen -->
   <div id="stealthOverlay" onclick="disableStealth()">
     <div>[SYSTEM UPDATE IN PROGRESS - DO NOT TURN OFF DEVICE]</div>
-    <div style="margin-top:20px; font-size: 12px; opacity:0.5;">(Click anywhere on screen to exit stealth mode)</div>
+    <div style="margin-top:20px; font-size: 12px; opacity:0.6;">(Click anywhere on screen to unlock Guardian Pro back UI)</div>
   </div>
 
-  <!-- Footer Monetization -->
+  <!-- Footer with Non-Intrusive Support -->
   <footer>
+    <!-- Ethical Ads Container -->
     <div data-ea-publisher="naimish-guardian" data-ea-type="image" style="max-width:300px;"></div>
+    
+    <!-- Buy Me A Coffee / Tip Button -->
     <a href="https://buymeacoffee.com" target="_blank" class="coffee-btn">☕ Buy Me A Coffee</a>
   </footer>
 
@@ -155,7 +154,7 @@
     let recordedChunks = [];
     let audioCtx, analyser, dataArray;
 
-    // Real-Time HUD Clock
+    // Clock HUD
     setInterval(() => {
       document.getElementById('timestamp').innerText = new Date().toLocaleTimeString();
     }, 1000);
@@ -168,11 +167,11 @@
         setupAudio(stream);
         requestAnimationFrame(processSensors);
       } catch (err) {
-        alert("Camera and Microphone access are required for Guardian Pro!");
+        alert("Camera and Microphone permissions are required for security monitoring!");
       }
     }
 
-    // Web Audio Analyzer
+    // Web Audio Decibel Meter Setup
     function setupAudio(stream) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       analyser = audioCtx.createAnalyser();
@@ -182,12 +181,12 @@
       dataArray = new Uint8Array(analyser.frequencyBinCount);
     }
 
-    // Camera Filter Switcher
+    // Dynamic View Filters
     function setFilter(filterClass) {
       video.className = filterClass;
     }
 
-    // Arming Toggle
+    // Toggle Armed State
     function toggleArming() {
       armed = !armed;
       const btn = document.getElementById('armBtn');
@@ -195,16 +194,16 @@
         btn.innerText = "SYSTEM ARMED (DISARM)";
         btn.classList.add('btn-danger');
       } else {
-        btn.innerText = "ARM SYSTEM";
+        btn.innerText = "ARM SECURITY SYSTEM";
         btn.classList.remove('btn-danger');
         document.body.classList.remove('alarm-active');
       }
     }
 
-    // Process Motion & Audio Sensor Frames
+    // Process Motion & Sound Detection Frames
     function processSensors() {
       if (video.readyState === video.HAVE_ENOUGH_DATA) {
-        // Motion Analysis
+        // Motion Processing
         canvas.width = 160; canvas.height = 120;
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         let currentFrame = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -216,29 +215,27 @@
           }
           let score = Math.min(100, Math.floor(diff / 10000));
           document.getElementById('motionMeter').style.width = score + '%';
-          document.getElementById('motionVal').innerText = score + '%';
 
-          if (score > 35) triggerBreachAlert();
+          if (score > 35) triggerBreachAlert("Motion Detected");
         }
         prevFrame = currentFrame;
 
-        // Audio Frequency Analysis
+        // Audio Processing
         if (analyser && armed) {
           analyser.getByteFrequencyData(dataArray);
           let sum = dataArray.reduce((a, b) => a + b, 0);
           let audioScore = Math.min(100, Math.floor(sum / dataArray.length));
           document.getElementById('audioMeter').style.width = audioScore + '%';
-          document.getElementById('audioVal').innerText = audioScore + '%';
 
-          if (audioScore > 60) triggerBreachAlert();
+          if (audioScore > 60) triggerBreachAlert("Noise Threshold Exceeded");
         }
       }
       requestAnimationFrame(processSensors);
     }
 
-    // Intruder Breach Handler
-    function triggerBreachAlert() {
-      if (document.body.classList.contains('alarm-active')) return;
+    // Intruder Breach Sequence
+    function triggerBreachAlert(reason) {
+      if (document.body.classList.contains('alarm-active')) return; // Avoid repeat trigger
 
       document.body.classList.add('alarm-active');
       playSynthesizedSiren();
@@ -250,9 +247,8 @@
       }, 4000);
     }
 
-    // Web Audio Synthesizer Alarm (Zero audio asset files required)
+    // Web Audio Synthesizer Alarm (No external audio files needed!)
     function playSynthesizedSiren() {
-      if (!audioCtx) return;
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'sawtooth';
@@ -264,7 +260,7 @@
       osc.stop(audioCtx.currentTime + 0.6);
     }
 
-    // Photo Snapshot Capture
+    // Automatic Snapshot Log
     function takeSnapshot() {
       const snapCanvas = document.createElement('canvas');
       snapCanvas.width = video.videoWidth;
@@ -276,7 +272,7 @@
       document.getElementById('snapshotGallery').prepend(img);
     }
 
-    // Auto Incident Recording
+    // Automatic Security Video Capture
     function startVideoRecording() {
       if (mediaRecorder && mediaRecorder.state === "recording") return;
 
@@ -290,11 +286,9 @@
 
       mediaRecorder.start();
       setTimeout(() => {
-        if (mediaRecorder.state === "recording") {
-          mediaRecorder.stop();
-        }
+        mediaRecorder.stop();
         recBadge.style.display = 'none';
-      }, 5000);
+      }, 5000); // Record 5-second incident clips
     }
 
     function saveRecording() {
@@ -302,7 +296,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `guardian_breach_${Date.now()}.webm`;
+      a.download = `incident_${Date.now()}.webm`;
       a.click();
     }
 
@@ -310,7 +304,7 @@
     function enableStealth() { document.getElementById('stealthOverlay').style.display = 'block'; }
     function disableStealth() { document.getElementById('stealthOverlay').style.display = 'none'; }
 
-    // Bootstrap app
+    // Launch
     initSensors();
   </script>
 </body>
